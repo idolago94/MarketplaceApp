@@ -11,12 +11,12 @@ import { MOCK_PRODUCTS, getProductById } from './products';
 
 // Simulate network delay
 const delay = (ms: number = 500): Promise<void> => {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+  return new Promise(resolve => setTimeout(resolve, ms));
 };
 
 // Simulate random errors for robustness testing (5% chance)
 const shouldSimulateError = (): boolean => {
-  return Math.random() < 0.05;
+  return false; // Math.random() < 0.05;
 };
 
 // Mock cart storage (in real app, this would be backend/database)
@@ -33,39 +33,41 @@ const mockOrders: Order[] = [];
 // Filter and search logic
 const filterProducts = (
   products: Product[],
-  filters: ProductFilters
+  filters: ProductFilters,
 ): Product[] => {
   let filtered = [...products];
 
   if (filters.search) {
     const searchLower = filters.search.toLowerCase();
     filtered = filtered.filter(
-      (product) =>
+      product =>
         product.name.toLowerCase().includes(searchLower) ||
         product.description.toLowerCase().includes(searchLower) ||
         product.brand.toLowerCase().includes(searchLower) ||
-        product.tags.some((tag) => tag.toLowerCase().includes(searchLower))
+        product.tags.some(tag => tag.toLowerCase().includes(searchLower)),
     );
   }
 
   if (filters.category) {
-    filtered = filtered.filter((product) => product.category === filters.category);
+    filtered = filtered.filter(
+      product => product.category === filters.category,
+    );
   }
 
   if (filters.minPrice !== undefined) {
-    filtered = filtered.filter((product) => product.price >= filters.minPrice!);
+    filtered = filtered.filter(product => product.price >= filters.minPrice!);
   }
 
   if (filters.maxPrice !== undefined) {
-    filtered = filtered.filter((product) => product.price <= filters.maxPrice!);
+    filtered = filtered.filter(product => product.price <= filters.maxPrice!);
   }
 
   if (filters.minRating !== undefined) {
-    filtered = filtered.filter((product) => product.rating >= filters.minRating!);
+    filtered = filtered.filter(product => product.rating >= filters.minRating!);
   }
 
   if (filters.inStock) {
-    filtered = filtered.filter((product) => product.stock > 0);
+    filtered = filtered.filter(product => product.stock > 0);
   }
 
   return filtered;
@@ -74,7 +76,7 @@ const filterProducts = (
 // Sort logic
 const sortProducts = (
   products: Product[],
-  sortOption: SortOption
+  sortOption: SortOption,
 ): Product[] => {
   const sorted = [...products];
 
@@ -90,7 +92,7 @@ const sortProducts = (
     case 'newest':
       return sorted.sort(
         (a, b) =>
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
       );
     default:
       return sorted;
@@ -106,7 +108,7 @@ export const fetchProducts = async (
   page: number = 1,
   limit: number = 20,
   filters: ProductFilters = {},
-  sort: SortOption = 'newest'
+  sort: SortOption = 'newest',
 ): Promise<PaginatedResponse<Product>> => {
   await delay(300 + Math.random() * 400); // 300-700ms delay
 
@@ -171,7 +173,7 @@ export const fetchProductById = async (id: string): Promise<Product> => {
 export const searchProducts = async (
   query: string,
   page: number = 1,
-  limit: number = 20
+  limit: number = 20,
 ): Promise<PaginatedResponse<Product>> => {
   return fetchProducts(page, limit, { search: query });
 };
@@ -194,7 +196,7 @@ export const fetchCart = async (): Promise<Cart> => {
  */
 export const addToCart = async (
   productId: string,
-  quantity: number
+  quantity: number,
 ): Promise<Cart> => {
   await delay(300 + Math.random() * 300); // 300-600ms delay
 
@@ -214,13 +216,17 @@ export const addToCart = async (
   }
 
   // Check stock
-  const existingItem = mockCart.items.find((item) => item.productId === productId);
+  const existingItem = mockCart.items.find(
+    item => item.productId === productId,
+  );
   const currentQuantity = existingItem ? existingItem.quantity : 0;
   const newQuantity = currentQuantity + quantity;
 
   if (newQuantity > product.stock) {
     throw new Error(
-      `Cannot add ${quantity} items. Only ${product.stock - currentQuantity} available.`
+      `Cannot add ${quantity} items. Only ${
+        product.stock - currentQuantity
+      } available.`,
     );
   }
 
@@ -241,7 +247,7 @@ export const addToCart = async (
  */
 export const updateCartItem = async (
   productId: string,
-  quantity: number
+  quantity: number,
 ): Promise<Cart> => {
   await delay(300 + Math.random() * 300); // 300-600ms delay
 
@@ -267,11 +273,15 @@ export const updateCartItem = async (
 
   // Check stock
   if (quantity > product.stock) {
-    throw new Error(`Cannot set quantity to ${quantity}. Only ${product.stock} available.`);
+    throw new Error(
+      `Cannot set quantity to ${quantity}. Only ${product.stock} available.`,
+    );
   }
 
   // Find and update item
-  const existingItem = mockCart.items.find((item) => item.productId === productId);
+  const existingItem = mockCart.items.find(
+    item => item.productId === productId,
+  );
 
   if (!existingItem) {
     throw new Error(`Product ${productId} not in cart`);
@@ -293,7 +303,7 @@ export const removeFromCart = async (productId: string): Promise<Cart> => {
     throw new Error('Failed to remove item from cart. Please try again.');
   }
 
-  mockCart.items = mockCart.items.filter((item) => item.productId !== productId);
+  mockCart.items = mockCart.items.filter(item => item.productId !== productId);
   mockCart.updatedAt = new Date().toISOString();
 
   return { ...mockCart };
@@ -342,7 +352,7 @@ export const placeOrder = async (): Promise<Order> => {
 
     if (cartItem.quantity > product.stock) {
       throw new Error(
-        `${product.name} is out of stock. Only ${product.stock} available.`
+        `${product.name} is out of stock. Only ${product.stock} available.`,
       );
     }
 
@@ -384,7 +394,7 @@ export const fetchOrderById = async (orderId: string): Promise<Order> => {
     throw new Error('Failed to fetch order. Please try again.');
   }
 
-  const order = mockOrders.find((o) => o.id === orderId);
+  const order = mockOrders.find(o => o.id === orderId);
 
   if (!order) {
     throw new Error(`Order with ID ${orderId} not found`);
@@ -404,7 +414,7 @@ export const fetchOrders = async (): Promise<Order[]> => {
   }
 
   return [...mockOrders].sort(
-    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
   );
 };
 

@@ -1,14 +1,15 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
-import { mockBaseQuery } from './mocks';
+import { mockBaseQuery, Product } from './mocks';
+import { PaginatedQuery, PaginatedResponse } from './types';
 
 export const api = createApi({
   reducerPath: 'api',
   baseQuery: mockBaseQuery,
   endpoints: builder => ({
-    getAllProducts: builder.query<any[], void>({
-      query: () => ({ url: '/products', method: 'GET' }),
+    getProducts: builder.query<PaginatedResponse<Product>, PaginatedQuery>({
+      query: ({ limit, page }) => ({ method: 'GET', url: `/products?limit=${limit}&page=${page}` }),
     }),
   }),
 });
 
-export const { useGetAllProductsQuery } = api;
+export const { useGetProductsQuery } = api;

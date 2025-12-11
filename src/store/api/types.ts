@@ -64,7 +64,17 @@ export interface OrderItem {
   price: number;
 }
 
-export type OrderStatus = 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
+export type OrderStatus =
+  | 'pending'
+  | 'processing'
+  | 'shipped'
+  | 'delivered'
+  | 'cancelled';
+
+export interface PaginatedQuery {
+  page: number;
+  limit: number;
+}
 
 export interface PaginatedResponse<T> {
   data: T[];
@@ -86,4 +96,9 @@ export interface ProductFilters {
   inStock?: boolean;
 }
 
-export type SortOption = 'price-asc' | 'price-desc' | 'rating-desc' | 'name-asc' | 'newest';
+export type SortOption =
+  | 'price-asc'
+  | 'price-desc'
+  | 'rating-desc'
+  | 'name-asc'
+  | 'newest';

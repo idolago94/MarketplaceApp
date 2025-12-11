@@ -6,7 +6,6 @@
  */
 
 import {
-  ActivityIndicator,
   StatusBar,
   StyleSheet,
   useColorScheme,
@@ -16,18 +15,12 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { Provider } from 'react-redux';
 import styled from 'styled-components/native';
 import { store } from './src/store';
-import { useGetAllProductsQuery } from './src/store/api';
+import ProductsList from './src/components/ProductsList';
 
 const Header = styled.Text`
   text-align: center;
   font-weight: 700;
   font-size: 28px;
-`;
-
-const ProductsCounter = styled.Text`
-  text-align: center;
-  font-size: 22px;
-  margin-vertical: 30px;
 `;
 
 function App() {
@@ -44,17 +37,11 @@ function App() {
 }
 
 function AppContent() {
-  const { data, isLoading } = useGetAllProductsQuery();
-
   return (
     <View style={styles.container}>
       <SafeAreaView>
         <Header>MarketplaceApp</Header>
-        {isLoading ? (
-          <ActivityIndicator />
-        ) : (
-          <ProductsCounter>{data?.length} Products</ProductsCounter>
-        )}
+        <ProductsList />
       </SafeAreaView>
     </View>
   );
