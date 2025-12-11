@@ -1,6 +1,7 @@
 import { BaseQueryFn } from '@reduxjs/toolkit/query';
 import { ApiError, Category, QueryArgs, SortOption } from '../types';
-import { fetchCategories, fetchProducts } from './api';
+import { addToCart, fetchCart, fetchCategories, fetchProducts } from './api';
+import { getProductById } from './products';
 
 // Types
 export type {
@@ -44,6 +45,7 @@ export const mockBaseQuery: BaseQueryFn<QueryArgs, unknown, ApiError> = async ({
   url,
   method,
   params = {},
+  body = {},
 }) => {
   // GET endpoints
   if (method === 'GET') {
@@ -71,9 +73,48 @@ export const mockBaseQuery: BaseQueryFn<QueryArgs, unknown, ApiError> = async ({
           };
         }
       }
+      case '/product': {
+        try {
+          const id = String(params.id);
+          const data = await getProductById(id);
+          return { data };
+        } catch (error: any) {
+          return {
+            error: { status: 400, message: error?.message ?? 'Unknown error' },
+          };
+        }
+      }
       case '/categories': {
         try {
           const data = await fetchCategories();
+          return { data };
+        } catch (error: any) {
+          return {
+            error: { status: 400, message: error?.message ?? 'Unknown error' },
+          };
+        }
+      }
+      case '/cart': {
+        try {
+          const data = await fetchCart();
+          return { data };
+        } catch (error: any) {
+          return {
+            error: { status: 400, message: error?.message ?? 'Unknown error' },
+          };
+        }
+      }
+    }
+  }
+
+  // POST endpoints
+  if (method === 'POST') {
+    switch (url) {
+      case '/cart/add': {
+        try {
+          const id = String(body.id);
+          const quantity = Number(body.quantity);
+          const data = await addToCart(id, quantity);
           return { data };
         } catch (error: any) {
           return {

@@ -1,6 +1,7 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { mockBaseQuery, Product } from './mocks';
 import {
+  Cart,
   Category,
   PaginatedQuery,
   PaginatedResponse,
@@ -26,13 +27,39 @@ export const api = createApi({
         params: { ...pagination, ...filters, sort },
       }),
     }),
+    getProduct: builder.query<Product, { id: string }>({
+      query: ({ id }) => ({
+        method: 'GET',
+        url: '/product',
+        params: { id },
+      }),
+    }),
     getCategories: builder.query<Category[], void>({
       query: () => ({
         method: 'GET',
         url: '/categories',
       }),
     }),
+    getCart: builder.query<Cart, void>({
+      query: () => ({
+        method: 'GET',
+        url: '/cart',
+      }),
+    }),
+    addToCart: builder.mutation<Cart, { id: string; quantity: number }>({
+      query: body => ({
+        method: 'POST',
+        url: '/cart/add',
+        body,
+      }),
+    }),
   }),
 });
 
-export const { useGetProductsQuery, useGetCategoriesQuery } = api;
+export const {
+  useGetProductsQuery,
+  useGetProductQuery,
+  useGetCategoriesQuery,
+  useGetCartQuery,
+  useAddToCartMutation
+} = api;

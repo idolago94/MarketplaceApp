@@ -52,14 +52,21 @@ export default function Filters({
       </Row>
       <AsyncView
         isLoading={isLoading}
-        error={error || !data ? 'Failed to get categories' : undefined}
+        error={
+          error || !data
+            ? error?.message ?? 'Failed to get categories'
+            : undefined
+        }
       >
         <FlatList
           horizontal
           showsHorizontalScrollIndicator={false}
           data={data}
           renderItem={({ item }) => (
-            <CategoryButton onPress={() => onCategoryPress(item)} selected={selectedCategory === item}>
+            <CategoryButton
+              onPress={() => onCategoryPress(item)}
+              selected={selectedCategory === item}
+            >
               <CategoryButtonText selected={selectedCategory === item}>
                 {item}
               </CategoryButtonText>
@@ -84,7 +91,7 @@ const CategoryButton = styled.TouchableOpacity<{ selected: boolean }>`
   border-width: 1px;
   border-radius: 8px;
   padding: 2px 8px;
-  background-color: ${props => props.selected ? 'black' : 'white'}
+  background-color: ${props => (props.selected ? 'black' : 'white')};
 `;
 
 const CategoryButtonText = styled.Text<{ selected: boolean }>`

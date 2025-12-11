@@ -1,8 +1,6 @@
 import { Product } from '../../store/api/types';
 import styled from 'styled-components/native';
 import { Row } from '../shared';
-import { useNavigation } from '@react-navigation/native';
-import { RootStackNavigationProp } from '../../navigation/types';
 
 const ProductContainer = styled.TouchableOpacity`
   border-bottom-width: 1px;

@@ -1,7 +1,7 @@
 export type QueryArgs = {
   url: string;
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
-  body?: unknown;
+  body?: { [key: string]: unknown };
   params?: { [key: string]: unknown };
 };
 

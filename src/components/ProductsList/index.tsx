@@ -30,7 +30,9 @@ export default function ProductsList({ onProductPress }: ProductsListProps) {
   return (
     <AsyncView
       isLoading={isLoading}
-      error={error || !data ? 'Failed to get products' : undefined}
+      error={
+        error || !data ? error?.message ?? 'Failed to get products' : undefined
+      }
     >
       <View>
         <FiltersWrap>
@@ -51,7 +53,7 @@ export default function ProductsList({ onProductPress }: ProductsListProps) {
           data={data}
           keyExtractor={item => item.id}
           renderItem={({ item }) => (
-            <ProductCard {...item} onProductPress={onProductPress} />
+            <ProductCard {...item} onPress={onProductPress} />
           )}
           onEndReached={loadMore}
           ListFooterComponent={isFetching ? <ActivityIndicator /> : undefined}

@@ -12,7 +12,7 @@ export default function AsyncView({ isLoading, error, children }: PropsWithChild
   }
 
   if (error) {
-    return <Text>Failed to get products</Text>;
+    return <Text>{error}</Text>;
   }
 
   return children

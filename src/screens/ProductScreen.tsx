@@ -1,18 +1,30 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/types';
 import styled from 'styled-components/native';
-import { Button } from 'react-native';
+import { Alert, Button } from 'react-native';
 import { Row } from '../components/shared';
 import QuantityModifier from '../components/QuantityModifier';
 import { useRef } from 'react';
+import { useAddToCartMutation } from '../store/api';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Product'>;
 
 const INITIAL_AMOUNT = 1;
 
 export default function ProductScreen({ route }: Props) {
-  const { name, description, image, price, category, rating, stock, brand } =
-    route.params;
+  const {
+    id,
+    name,
+    description,
+    image,
+    price,
+    category,
+    rating,
+    stock,
+    brand,
+  } = route.params;
+
+  const [addToCart] = useAddToCartMutation();
 
   const amount = useRef<number>(1);
 
@@ -41,7 +53,14 @@ export default function ProductScreen({ route }: Props) {
           />
           <ProductPrice>Price: {price}</ProductPrice>
         </Row>
-        <Button title="add to cart" />
+        <Button
+          title="add to cart"
+          onPress={() => {
+            addToCart({ id, quantity: amount.current }).catch(err =>
+              Alert.alert(err.message ?? 'Failed to add this product'),
+            );
+          }}
+        />
       </DetailsContainer>
     </Container>
   );
