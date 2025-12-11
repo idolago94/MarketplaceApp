@@ -1,8 +1,10 @@
 import { Product } from '../../store/api/types';
 import styled from 'styled-components/native';
 import { Row } from '../shared';
+import { useNavigation } from '@react-navigation/native';
+import { RootStackNavigationProp } from '../../navigation/types';
 
-const ProductContainer = styled.View`
+const ProductContainer = styled.TouchableOpacity`
   border-bottom-width: 1px;
   border-color: lightgray;
   padding: 8px;
@@ -60,18 +62,12 @@ const ProductPrice = styled.Text`
   margin-top: 2px;
 `;
 
-export default function ProductCard({
-  name,
-  image,
-  description,
-  category,
-  rating,
-  stock,
-  brand,
-  price,
-}: Product) {
+export default function ProductCard(props: Product) {
+  const { name, image, description, category, rating, stock, brand, price } =
+    props;
+  const navigation = useNavigation<RootStackNavigationProp>();
   return (
-    <ProductContainer>
+    <ProductContainer onPress={() => navigation.navigate('Product', props)}>
       <Row>
         <ProductImage source={{ uri: image }} />
         <ProductDetails>

@@ -1,7 +1,7 @@
 import styled from 'styled-components/native';
 import { Row } from '../shared';
 import { useMemo } from 'react';
-import { Button, FlatList } from 'react-native';
+import { FlatList } from 'react-native';
 import AsyncView from '../AsyncView';
 import { useGetCategoriesQuery } from '../../store/api';
 import { Category } from '../../store/api/types';
@@ -59,11 +59,11 @@ export default function Filters({
           showsHorizontalScrollIndicator={false}
           data={data}
           renderItem={({ item }) => (
-            <Button
-              title={item}
-              onPress={() => onCategoryPress(item)}
-              color={selectedCategory === item ? 'blue' : 'black'}
-            />
+            <CategoryButton onPress={() => onCategoryPress(item)} selected={selectedCategory === item}>
+              <CategoryButtonText selected={selectedCategory === item}>
+                {item}
+              </CategoryButtonText>
+            </CategoryButton>
           )}
         />
       </AsyncView>
@@ -76,4 +76,17 @@ const SearchInput = styled.TextInput`
   flex: 1;
   padding: 4px;
   border-radius: 4px;
+`;
+
+const CategoryButton = styled.TouchableOpacity<{ selected: boolean }>`
+  margin-right: 4px;
+  margin-top: 4px;
+  border-width: 1px;
+  border-radius: 8px;
+  padding: 2px 8px;
+  background-color: ${props => props.selected ? 'black' : 'white'}
+`;
+
+const CategoryButtonText = styled.Text<{ selected: boolean }>`
+  color: ${props => (props.selected ? 'white' : 'black')};
 `;
