@@ -6,6 +6,7 @@ import {
   Cart,
   Order,
   OrderItem,
+  Category,
 } from '../types';
 import { MOCK_PRODUCTS, getProductById } from './products';
 
@@ -54,22 +55,6 @@ const filterProducts = (
     );
   }
 
-  if (filters.minPrice !== undefined) {
-    filtered = filtered.filter(product => product.price >= filters.minPrice!);
-  }
-
-  if (filters.maxPrice !== undefined) {
-    filtered = filtered.filter(product => product.price <= filters.maxPrice!);
-  }
-
-  if (filters.minRating !== undefined) {
-    filtered = filtered.filter(product => product.rating >= filters.minRating!);
-  }
-
-  if (filters.inStock) {
-    filtered = filtered.filter(product => product.stock > 0);
-  }
-
   return filtered;
 };
 
@@ -85,10 +70,14 @@ const sortProducts = (
       return sorted.sort((a, b) => a.price - b.price);
     case 'price-desc':
       return sorted.sort((a, b) => b.price - a.price);
+    case 'rating-asc':
+      return sorted.sort((a, b) => a.rating - b.rating);
     case 'rating-desc':
       return sorted.sort((a, b) => b.rating - a.rating);
     case 'name-asc':
       return sorted.sort((a, b) => a.name.localeCompare(b.name));
+    case 'name-desc':
+      return sorted.sort((a, b) => b.name.localeCompare(a.name));
     case 'newest':
       return sorted.sort(
         (a, b) =>
@@ -100,6 +89,21 @@ const sortProducts = (
 };
 
 // API Mock Functions
+
+export const fetchCategories = async (): Promise<Category[]> => {
+  await delay(300 + Math.random() * 400);
+
+  return [
+    'beauty',
+    'books',
+    'clothing',
+    'electronics',
+    'food',
+    'home',
+    'sports',
+    'toys'
+  ]
+}
 
 /**
  * Fetch products with pagination, filtering, and sorting

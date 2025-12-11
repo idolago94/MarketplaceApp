@@ -2,6 +2,7 @@ export type QueryArgs = {
   url: string;
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
   body?: unknown;
+  params?: { [key: string]: unknown };
 };
 
 export type ApiError = {
@@ -90,15 +91,13 @@ export interface PaginatedResponse<T> {
 export interface ProductFilters {
   search?: string;
   category?: Category;
-  minPrice?: number;
-  maxPrice?: number;
-  minRating?: number;
-  inStock?: boolean;
 }
 
 export type SortOption =
   | 'price-asc'
   | 'price-desc'
+  | 'rating-asc'
   | 'rating-desc'
   | 'name-asc'
+  | 'name-desc'
   | 'newest';

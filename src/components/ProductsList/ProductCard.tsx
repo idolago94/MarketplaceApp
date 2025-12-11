@@ -1,6 +1,6 @@
-import { Product } from '../store/api/types';
+import { Product } from '../../store/api/types';
 import styled from 'styled-components/native';
-import { Row } from './shared';
+import { Row } from '../shared';
 
 const ProductContainer = styled.View`
   border-bottom-width: 1px;

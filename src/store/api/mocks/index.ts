@@ -1,6 +1,6 @@
 import { BaseQueryFn } from '@reduxjs/toolkit/query';
-import { ApiError, QueryArgs } from '../types';
-import { fetchProducts } from './api';
+import { ApiError, Category, QueryArgs, SortOption } from '../types';
+import { fetchCategories, fetchProducts } from './api';
 
 // Types
 export type {
@@ -43,14 +43,11 @@ export {
 export const mockBaseQuery: BaseQueryFn<QueryArgs, unknown, ApiError> = async ({
   url,
   method,
+  params = {},
 }) => {
-  const request = new URL(url, 'https://example.com');
-  const pathname = request.pathname;
-  const params = Object.fromEntries(request.searchParams.entries());
-
   // GET endpoints
   if (method === 'GET') {
-    switch (pathname) {
+    switch (url) {
       case '/products': {
         const limit = Number(params.limit);
         const page = Number(params.page);
@@ -58,10 +55,30 @@ export const mockBaseQuery: BaseQueryFn<QueryArgs, unknown, ApiError> = async ({
           return { error: { status: 400, message: 'Params is not valid' } };
         }
         try {
-          const data = await fetchProducts(page, limit);
+          const data = await fetchProducts(
+            page,
+            limit,
+            {
+              search: params.search?.toString() ?? '',
+              category: params.category as Category,
+            },
+            params.sort as SortOption,
+          );
           return { data };
         } catch (error: any) {
-          return { error: { status: 400, message: error?.message ?? 'Unknown error' } };
+          return {
+            error: { status: 400, message: error?.message ?? 'Unknown error' },
+          };
+        }
+      }
+      case '/categories': {
+        try {
+          const data = await fetchCategories();
+          return { data };
+        } catch (error: any) {
+          return {
+            error: { status: 400, message: error?.message ?? 'Unknown error' },
+          };
         }
       }
     }
