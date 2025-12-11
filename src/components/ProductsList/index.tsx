@@ -2,13 +2,17 @@ import { ActivityIndicator, FlatList, View } from 'react-native';
 import { useGetPaginatedProducts } from '../../store/api/hooks';
 import ProductCard from './ProductCard';
 import { useEffect, useRef, useState } from 'react';
-import { ProductFilters, SortOption } from '../../store/api/types';
+import { Product, ProductFilters, SortOption } from '../../store/api/types';
 import SortButtons from './SortButtons';
 import Filters from './Filters';
 import styled from 'styled-components/native';
 import AsyncView from '../AsyncView';
 
-export default function ProductsList() {
+interface ProductsListProps {
+  onProductPress(product: Product): void;
+}
+
+export default function ProductsList({ onProductPress }: ProductsListProps) {
   const [filters, setFilters] = useState<ProductFilters>({
     search: '',
     category: undefined,
@@ -46,7 +50,9 @@ export default function ProductsList() {
           ref={listRef}
           data={data}
           keyExtractor={item => item.id}
-          renderItem={({ item }) => <ProductCard {...item} />}
+          renderItem={({ item }) => (
+            <ProductCard {...item} onProductPress={onProductPress} />
+          )}
           onEndReached={loadMore}
           ListFooterComponent={isFetching ? <ActivityIndicator /> : undefined}
         />

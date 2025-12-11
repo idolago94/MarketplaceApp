@@ -62,12 +62,18 @@ const ProductPrice = styled.Text`
   margin-top: 2px;
 `;
 
-export default function ProductCard(props: Product) {
+interface ProductCardProps extends Product {
+  onPress?(product: Product): void;
+}
+
+export default function ProductCard({
+  onPress,
+  ...productProps
+}: ProductCardProps) {
   const { name, image, description, category, rating, stock, brand, price } =
-    props;
-  const navigation = useNavigation<RootStackNavigationProp>();
+    productProps;
   return (
-    <ProductContainer onPress={() => navigation.navigate('Product', props)}>
+    <ProductContainer onPress={() => onPress?.(productProps)}>
       <Row>
         <ProductImage source={{ uri: image }} />
         <ProductDetails>
