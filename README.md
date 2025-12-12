@@ -1,4 +1,76 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# MarketplaceApp
+
+A full-featured e-commerce marketplace application built with React Native. This app provides a seamless shopping experience with product browsing, filtering, cart management, and checkout functionality.
+
+## Features
+
+- **Product Catalog**: Browse through a paginated list of products with images, prices, and descriptions
+- **Advanced Filtering**: Filter products by category and price range
+- **Sorting Options**: Sort products by newest, price (high to low), or price (low to high)
+- **Product Details**: View detailed product information including full descriptions and specifications
+- **Shopping Cart**: Add, update, and remove items from cart with real-time updates
+- **Order Placement**: Complete checkout process with cart summary
+- **Responsive UI**: Native mobile experience optimized for both iOS and Android
+
+## Architecture
+
+### Tech Stack
+
+- **React Native 0.82.1** - Cross-platform mobile framework
+- **TypeScript** - Type-safe development
+- **Redux Toolkit** - State management with modern Redux patterns
+- **RTK Query** - Data fetching and caching
+- **Redux Saga** - Side effect management for async operations
+- **React Navigation** - Native stack navigation
+- **Styled Components** - CSS-in-JS styling solution
+- **React Native Vector Icons** - Icon library
+
+### Project Structure
+
+```
+src/
+├── components/          # Reusable UI components
+│   ├── AsyncView/       # Loading and error state wrapper
+│   ├── CartFloatButton/ # Floating cart button with badge
+│   ├── ProductsList/    # Product listing with filters and sort
+│   └── QuantityModifier/# Quantity control component
+├── navigation/          # Navigation types and configuration
+├── screens/            # Main app screens
+│   ├── MarketplaceScreen.tsx  # Product catalog screen
+│   ├── ProductScreen.tsx      # Product detail screen
+│   └── CartScreen/            # Shopping cart screen
+├── store/              # Redux store configuration
+│   ├── api/            # RTK Query API endpoints
+│   │   └── mocks/      # Mock API implementation
+│   └── sagas/          # Redux saga watchers
+└── utils/              # Utility functions
+```
+
+### State Management
+
+The app uses a modern Redux architecture:
+
+- **RTK Query** for API calls and automatic caching
+- **Redux Saga** for handling side effects (auto-fetching cart after mutations)
+- **Redux Toolkit** for simplified reducer and store configuration
+
+### API Layer
+
+Currently using a mock API implementation that simulates:
+- Product fetching with pagination
+- Category filtering
+- Cart operations (add, update, remove)
+- Order placement
+
+The mock API is designed to be easily replaced with real backend endpoints by swapping the `mockBaseQuery` with a real `fetchBaseQuery` in `src/store/api/index.ts:14`.
+
+### Navigation Flow
+
+```
+Marketplace Screen → Product Details Screen
+                  ↓
+              Cart Screen (modal)
+```
 
 # Getting Started
 
