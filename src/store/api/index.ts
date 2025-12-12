@@ -12,6 +12,7 @@ import {
 export const api = createApi({
   reducerPath: 'api',
   baseQuery: mockBaseQuery,
+  tagTypes: ['Cart'],
   endpoints: builder => ({
     getProducts: builder.query<
       PaginatedResponse<Product>,
@@ -45,6 +46,7 @@ export const api = createApi({
         method: 'GET',
         url: '/cart',
       }),
+      providesTags: ['Cart'],
     }),
     addToCart: builder.mutation<Cart, { id: string; quantity: number }>({
       query: body => ({

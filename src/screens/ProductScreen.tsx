@@ -56,9 +56,11 @@ export default function ProductScreen({ route }: Props) {
         <Button
           title="add to cart"
           onPress={() => {
-            addToCart({ id, quantity: amount.current }).catch(err =>
-              Alert.alert(err.message ?? 'Failed to add this product'),
-            );
+            addToCart({ id, quantity: amount.current })
+              .unwrap()
+              .catch(err =>
+                Alert.alert(err.message ?? 'Failed to add this product'),
+              );
           }}
         />
       </DetailsContainer>

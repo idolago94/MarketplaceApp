@@ -101,9 +101,9 @@ export const fetchCategories = async (): Promise<Category[]> => {
     'food',
     'home',
     'sports',
-    'toys'
-  ]
-}
+    'toys',
+  ];
+};
 
 /**
  * Fetch products with pagination, filtering, and sorting
@@ -192,7 +192,11 @@ export const fetchCart = async (): Promise<Cart> => {
     throw new Error('Failed to fetch cart. Please try again.');
   }
 
-  return { ...mockCart };
+  // Return a deep copy to ensure immutability
+  return {
+    ...mockCart,
+    items: [...mockCart.items],
+  };
 };
 
 /**
@@ -220,10 +224,13 @@ export const addToCart = async (
   }
 
   // Check stock
-  const existingItem = mockCart.items.find(
+  const existingItemIndex = mockCart.items.findIndex(
     item => item.productId === productId,
   );
-  const currentQuantity = existingItem ? existingItem.quantity : 0;
+  let currentQuantity = 0;
+  if (existingItemIndex > -1) {
+    currentQuantity = mockCart.items[existingItemIndex].quantity;
+  }
   const newQuantity = currentQuantity + quantity;
 
   if (newQuantity > product.stock) {
@@ -234,16 +241,26 @@ export const addToCart = async (
     );
   }
 
-  // Add or update item
-  if (existingItem) {
-    existingItem.quantity = newQuantity;
+  // Add or update item (immutably)
+  if (existingItemIndex > -1) {
+    // Update existing item - create new array with updated item
+    mockCart.items = mockCart.items.map((item, index) =>
+      index === existingItemIndex
+        ? { ...item, quantity: newQuantity }
+        : item
+    );
   } else {
-    mockCart.items.push({ productId, quantity });
+    // Add new item - create new array with new item
+    mockCart.items = [...mockCart.items, { productId, quantity }];
   }
 
   mockCart.updatedAt = new Date().toISOString();
 
-  return { ...mockCart };
+  // Return a deep copy to ensure immutability
+  return {
+    ...mockCart,
+    items: [...mockCart.items],
+  };
 };
 
 /**
