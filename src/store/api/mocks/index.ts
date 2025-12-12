@@ -5,6 +5,7 @@ import {
   fetchCart,
   fetchCategories,
   fetchProducts,
+  placeOrder,
   removeFromCart,
   updateCartItem,
 } from './api';
@@ -130,6 +131,16 @@ export const mockBaseQuery: BaseQueryFn<QueryArgs, unknown, ApiError> = async ({
           };
         }
       }
+      case '/cart/place-order': {
+        try {
+          const data = await placeOrder();
+          return { data };
+        } catch (error: any) {
+          return {
+            error: { status: 400, message: error?.message ?? 'Unknown error' },
+          };
+        }
+      }
     }
   }
 
@@ -151,7 +162,7 @@ export const mockBaseQuery: BaseQueryFn<QueryArgs, unknown, ApiError> = async ({
     }
   }
 
-    // PUT endpoints
+  // PUT endpoints
   if (method === 'DELETE') {
     switch (url) {
       case '/cart/item': {

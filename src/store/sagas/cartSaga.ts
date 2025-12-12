@@ -18,6 +18,7 @@ function* watchAddToCart() {
   yield takeEvery(api.endpoints.addToCart.matchFulfilled, fetchCartAfterAdd);
   yield takeEvery(api.endpoints.updateCartItem.matchFulfilled, fetchCartAfterAdd);
   yield takeEvery(api.endpoints.removeCartItem.matchFulfilled, fetchCartAfterAdd);
+  yield takeEvery(api.endpoints.placeOrder.matchFulfilled, fetchCartAfterAdd);
 }
 
 export default function* cartSaga() {

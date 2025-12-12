@@ -69,6 +69,12 @@ export const api = createApi({
         body: { id },
       }),
     }),
+    placeOrder: builder.mutation<Cart, void>({
+      query: () => ({
+        method: 'POST',
+        url: '/cart/place-order',
+      }),
+    }),
   }),
 });
 
@@ -80,4 +86,5 @@ export const {
   useAddToCartMutation,
   useUpdateCartItemMutation,
   useRemoveCartItemMutation,
+  usePlaceOrderMutation,
 } = api;
