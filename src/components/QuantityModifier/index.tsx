@@ -1,7 +1,7 @@
 import FontAwesome6 from '@react-native-vector-icons/fontawesome6';
 import { Row } from '../shared';
 import { Text } from 'react-native';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface QuantityModifier {
   initialValue?: number;
@@ -16,9 +16,14 @@ export default function QuantityModifier({
   min,
   max,
 }: QuantityModifier) {
+  const isFirstRender = useRef(true);
   const [value, setValue] = useState<number>(initialValue);
 
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
     onChange?.(value);
   }, [value, onChange]);
 

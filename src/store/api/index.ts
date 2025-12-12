@@ -55,6 +55,20 @@ export const api = createApi({
         body,
       }),
     }),
+    updateCartItem: builder.mutation<Cart, { id: string; quantity: number }>({
+      query: body => ({
+        method: 'PUT',
+        url: '/cart/item',
+        body,
+      }),
+    }),
+    removeCartItem: builder.mutation<Cart, string>({
+      query: id => ({
+        method: 'DELETE',
+        url: '/cart/item',
+        body: { id },
+      }),
+    }),
   }),
 });
 
@@ -63,5 +77,7 @@ export const {
   useGetProductQuery,
   useGetCategoriesQuery,
   useGetCartQuery,
-  useAddToCartMutation
+  useAddToCartMutation,
+  useUpdateCartItemMutation,
+  useRemoveCartItemMutation,
 } = api;

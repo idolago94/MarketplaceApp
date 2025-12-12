@@ -1,6 +1,13 @@
 import { BaseQueryFn } from '@reduxjs/toolkit/query';
 import { ApiError, Category, QueryArgs, SortOption } from '../types';
-import { addToCart, fetchCart, fetchCategories, fetchProducts } from './api';
+import {
+  addToCart,
+  fetchCart,
+  fetchCategories,
+  fetchProducts,
+  removeFromCart,
+  updateCartItem,
+} from './api';
 import { getProductById } from './products';
 
 // Types
@@ -47,6 +54,7 @@ export const mockBaseQuery: BaseQueryFn<QueryArgs, unknown, ApiError> = async ({
   params = {},
   body = {},
 }) => {
+  console.log('[mock request] -', { url, method });
   // GET endpoints
   if (method === 'GET') {
     switch (url) {
@@ -115,6 +123,41 @@ export const mockBaseQuery: BaseQueryFn<QueryArgs, unknown, ApiError> = async ({
           const id = String(body.id);
           const quantity = Number(body.quantity);
           const data = await addToCart(id, quantity);
+          return { data };
+        } catch (error: any) {
+          return {
+            error: { status: 400, message: error?.message ?? 'Unknown error' },
+          };
+        }
+      }
+    }
+  }
+
+  // PUT endpoints
+  if (method === 'PUT') {
+    switch (url) {
+      case '/cart/item': {
+        try {
+          const id = String(body.id);
+          const quantity = Number(body.quantity);
+          const data = await updateCartItem(id, quantity);
+          return { data };
+        } catch (error: any) {
+          return {
+            error: { status: 400, message: error?.message ?? 'Unknown error' },
+          };
+        }
+      }
+    }
+  }
+
+    // PUT endpoints
+  if (method === 'DELETE') {
+    switch (url) {
+      case '/cart/item': {
+        try {
+          const id = String(body.id);
+          const data = await removeFromCart(id);
           return { data };
         } catch (error: any) {
           return {

@@ -5,21 +5,7 @@ import { FlatList } from 'react-native';
 import AsyncView from '../AsyncView';
 import { useGetCategoriesQuery } from '../../store/api';
 import { Category } from '../../store/api/types';
-
-const debounce = <T extends (...args: any[]) => any>(
-  func: T,
-  delay: number,
-): ((...args: Parameters<T>) => void) => {
-  let timeoutId: number;
-
-  return (...args: Parameters<T>) => {
-    clearTimeout(timeoutId);
-
-    timeoutId = setTimeout(() => {
-      func(...args);
-    }, delay);
-  };
-};
+import { debounce } from '../../utils/debounce';
 
 interface FiltersProps {
   onSearchChange(txt: string): void;

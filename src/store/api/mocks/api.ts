@@ -299,19 +299,28 @@ export const updateCartItem = async (
     );
   }
 
-  // Find and update item
-  const existingItem = mockCart.items.find(
+  // Find and update item (immutably)
+  const existingItemIndex = mockCart.items.findIndex(
     item => item.productId === productId,
   );
 
-  if (!existingItem) {
+  if (existingItemIndex === -1) {
     throw new Error(`Product ${productId} not in cart`);
   }
 
-  existingItem.quantity = quantity;
+  // Update item - create new array with updated item
+  mockCart.items = mockCart.items.map((item, index) =>
+    index === existingItemIndex
+      ? { ...item, quantity }
+      : item
+  );
   mockCart.updatedAt = new Date().toISOString();
 
-  return { ...mockCart };
+  // Return a deep copy to ensure immutability
+  return {
+    ...mockCart,
+    items: [...mockCart.items],
+  };
 };
 
 /**
@@ -324,10 +333,15 @@ export const removeFromCart = async (productId: string): Promise<Cart> => {
     throw new Error('Failed to remove item from cart. Please try again.');
   }
 
+  // Remove item - create new array without the item
   mockCart.items = mockCart.items.filter(item => item.productId !== productId);
   mockCart.updatedAt = new Date().toISOString();
 
-  return { ...mockCart };
+  // Return a deep copy to ensure immutability
+  return {
+    ...mockCart,
+    items: [...mockCart.items],
+  };
 };
 
 /**
@@ -340,10 +354,15 @@ export const clearCart = async (): Promise<Cart> => {
     throw new Error('Failed to clear cart. Please try again.');
   }
 
+  // Clear all items - create new empty array
   mockCart.items = [];
   mockCart.updatedAt = new Date().toISOString();
 
-  return { ...mockCart };
+  // Return a deep copy to ensure immutability
+  return {
+    ...mockCart,
+    items: [...mockCart.items],
+  };
 };
 
 /**

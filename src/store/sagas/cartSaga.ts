@@ -16,6 +16,8 @@ function* fetchCartAfterAdd() {
 // Watch for successful addToCart mutations
 function* watchAddToCart() {
   yield takeEvery(api.endpoints.addToCart.matchFulfilled, fetchCartAfterAdd);
+  yield takeEvery(api.endpoints.updateCartItem.matchFulfilled, fetchCartAfterAdd);
+  yield takeEvery(api.endpoints.removeCartItem.matchFulfilled, fetchCartAfterAdd);
 }
 
 export default function* cartSaga() {
